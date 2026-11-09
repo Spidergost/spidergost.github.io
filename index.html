@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spidergost | Hub de Projets</title>
+    <title>Spidergost | Hub Automatique de Projets</title>
     <style>
         :root {
             --bg-color: #121214;
@@ -11,11 +11,11 @@
             --text-color: #e1e1e6;
             --text-muted: #a8a8b3;
             --accent: #9871f5;
-            --accent-hover: #7b4ee6;
+            --border: #29292e;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
             margin: 0;
@@ -35,13 +35,14 @@
 
         h1 {
             font-size: 2.5rem;
-            margin-bottom: 0.5rem;
+            margin: 0 0 0.5rem 0;
             color: #fff;
         }
 
         header p {
             color: var(--text-muted);
             font-size: 1.1rem;
+            margin: 0;
         }
 
         .grid {
@@ -60,7 +61,7 @@
 
         .card {
             background-color: var(--card-bg);
-            border: 1px solid #29292e;
+            border: 1px solid var(--border);
             border-radius: 8px;
             padding: 1.5rem;
             text-decoration: none;
@@ -78,11 +79,9 @@
 
         .card h2 {
             margin: 0 0 0.5rem 0;
-            font-size: 1.3rem;
+            font-size: 1.25rem;
             color: #fff;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
+            word-break: break-word;
         }
 
         .card p {
@@ -92,14 +91,32 @@
             line-height: 1.4;
         }
 
-        .card .badge {
-            align-self: flex-start;
+        .meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .badge {
             background-color: rgba(152, 113, 245, 0.1);
             color: var(--accent);
             padding: 0.25rem 0.5rem;
             border-radius: 4px;
             font-size: 0.8rem;
             font-weight: bold;
+        }
+
+        .stars {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .loading, .error {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            grid-column: 1 / -1;
+            padding: 3rem 0;
         }
 
         footer {
@@ -114,32 +131,81 @@
 
     <header>
         <h1>@Spidergost</h1>
-        <p>Bienvenue sur mon espace GitHub Pages. Découvrez mes outils et projets en ligne.</p>
+        <p>Mes projets et applications déployés via GitHub Pages</p>
     </header>
 
-    <main class="grid">
-        <!-- Projet Egregore -->
-        <a href="/Egregore/" class="card">
-            <div>
-                <h2>🎲 Egregore</h2>
-                <p>Outils et ressources génériques pour vos parties de jeu de rôle, côté joueur et MJ.</p>
-            </div>
-            <span class="badge">JdR</span>
-        </a>
-
-        <!-- Projet Stardew Valley -->
-        <a href="/StardewValley-Checklist/" class="card">
-            <div>
-                <h2>👨‍🌾 Stardew Valley Checklist</h2>
-                <p>Une checklist interactive pour suivre votre progression et vos objectifs à la ferme.</p>
-            </div>
-            <span class="badge">Gaming</span>
-        </a>
+    <main class="grid" id="projects-grid">
+        <div class="loading">Chargement de mes projets en cours...</div>
     </main>
 
     <footer>
-        <p>© 2026 Spidergost — Propulsé par GitHub Pages</p>
+        <p>© 2026 Spidergost — Généré dynamiquement</p>
     </footer>
 
+    <script>
+        // Configuration avec votre pseudonyme GitHub
+        const username = 'Spidergost';
+
+        async function fetchGitHubPages() {
+            const grid = document.getElementById('projects-grid');
+            
+            try {
+                // Appel à l'API GitHub pour lister vos dépôts publics
+                const response = await fetch(`https://github.com{username}/repos?per_page=100&sort=updated`);
+                
+                if (!response.ok) {
+                    throw new Error('Impossible de récupérer les données depuis l\'API GitHub');
+                }
+
+                const repos = await response.json();
+                
+                // Filtrer pour ne garder que les dépôts qui ont GitHub Pages activé (has_pages: true)
+                // On exclut également le dépôt racine lui-même (spidergost.github.io) pour éviter une boucle
+                const pagesRepos = repos.filter(repo => repo.has_pages && repo.name.toLowerCase() !== `${username}.toLowerCase().github.io`);
+
+                // Vider l'indicateur de chargement
+                grid.innerHTML = '';
+
+                if (pagesRepos.length === 0) {
+                    grid.innerHTML = '<div class="loading">Aucun sous-projet GitHub Pages trouvé pour le moment. Activez GitHub Pages dans les réglages de vos dépôts !</div>';
+                    return;
+                }
+
+                // Générer les cartes HTML dynamiquement
+                pagesRepos.forEach(repo => {
+                    const card = document.createElement('a');
+                    card.className = 'card';
+                    // L'URL de la page suit le format : https://github.io
+                    card.href = `https://${username}.github.io/${repo.name}/`;
+                    
+                    // Gérer la description si elle est absente sur GitHub
+                    const description = repo.description ? repo.description : "Aucune description fournie pour ce projet.";
+                    // Détecter le langage principal pour le badge
+                    const language = repo.language ? repo.language : "Web";
+                    // Compteur d'étoiles
+                    const stars = repo.stargazers_count > 0 ? `⭐ ${repo.stargazers_count}` : '';
+
+                    card.innerHTML = `
+                        <div>
+                            <h2>🔗 ${repo.name}</h2>
+                            <p>${description}</p>
+                        </div>
+                        <div class="meta">
+                            <span class="badge">${language}</span>
+                            <span class="stars">${stars}</span>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
+
+            } catch (error) {
+                console.error(error);
+                grid.innerHTML = `<div class="error">⚠️ Une erreur est survenue lors de la récupération des projets. Veuillez rafraîchir la page.</div>`;
+            }
+        }
+
+        // Lancer la fonction au chargement de la page
+        fetchGitHubPages();
+    </script>
 </body>
 </html>
