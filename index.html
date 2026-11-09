@@ -143,46 +143,38 @@
     </footer>
 
     <script>
-        // Configuration avec votre pseudonyme GitHub
         const username = 'Spidergost';
 
         async function fetchGitHubPages() {
             const grid = document.getElementById('projects-grid');
             
             try {
-                // Appel à l'API GitHub pour lister vos dépôts publics
                 const response = await fetch(`https://github.com{username}/repos?per_page=100&sort=updated`);
                 
                 if (!response.ok) {
-                    throw new Error('Impossible de récupérer les données depuis l\'API GitHub');
+                    throw new Error('Erreur API');
                 }
 
                 const repos = await response.json();
                 
-                // Filtrer pour ne garder que les dépôts qui ont GitHub Pages activé (has_pages: true)
-                // On exclut également le dépôt racine lui-même (spidergost.github.io) pour éviter une boucle
-                const pagesRepos = repos.filter(repo => repo.has_pages && repo.name.toLowerCase() !== `${username}.toLowerCase().github.io`);
+                // Correction ici : filtrage propre sans l'erreur de syntaxe précédente
+                const rootRepoName = `${username}.github.io`.toLowerCase();
+                const pagesRepos = repos.filter(repo => repo.has_pages && repo.name.toLowerCase() !== rootRepoName);
 
-                // Vider l'indicateur de chargement
                 grid.innerHTML = '';
 
                 if (pagesRepos.length === 0) {
-                    grid.innerHTML = '<div class="loading">Aucun sous-projet GitHub Pages trouvé pour le moment. Activez GitHub Pages dans les réglages de vos dépôts !</div>';
+                    grid.innerHTML = '<div class="loading">Aucun sous-projet GitHub Pages trouvé. Activez GitHub Pages dans les réglages de vos dépôts pour les voir apparaître !</div>';
                     return;
                 }
 
-                // Générer les cartes HTML dynamiquement
                 pagesRepos.forEach(repo => {
                     const card = document.createElement('a');
                     card.className = 'card';
-                    // L'URL de la page suit le format : https://github.io
                     card.href = `https://${username}.github.io/${repo.name}/`;
                     
-                    // Gérer la description si elle est absente sur GitHub
                     const description = repo.description ? repo.description : "Aucune description fournie pour ce projet.";
-                    // Détecter le langage principal pour le badge
                     const language = repo.language ? repo.language : "Web";
-                    // Compteur d'étoiles
                     const stars = repo.stargazers_count > 0 ? `⭐ ${repo.stargazers_count}` : '';
 
                     card.innerHTML = `
@@ -204,7 +196,6 @@
             }
         }
 
-        // Lancer la fonction au chargement de la page
         fetchGitHubPages();
     </script>
 </body>
