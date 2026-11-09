@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spidergost | Hub de Projets</title>
+    <style>
+        :root {
+            --bg-color: #121214;
+            --card-bg: #1a1a1e;
+            --text-color: #e1e1e6;
+            --text-muted: #a8a8b3;
+            --accent: #9871f5;
+            --accent-hover: #7b4ee6;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 2rem 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            max-width: 600px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            color: #fff;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            max-width: 800px;
+            width: 100%;
+        }
+
+        @media (min-width: 600px) {
+            .grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid #29292e;
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-decoration: none;
+            color: inherit;
+            transition: transform 0.2s, border-color 0.2s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            border-color: var(--accent);
+        }
+
+        .card h2 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1.3rem;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card p {
+            margin: 0 0 1.5rem 0;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        .card .badge {
+            align-self: flex-start;
+            background-color: rgba(152, 113, 245, 0.1);
+            color: var(--accent);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        footer {
+            margin-top: auto;
+            padding-top: 3rem;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>@Spidergost</h1>
+        <p>Bienvenue sur mon espace GitHub Pages. Découvrez mes outils et projets en ligne.</p>
+    </header>
+
+    <main class="grid">
+        <!-- Projet Egregore -->
+        <a href="/Egregore/" class="card">
+            <div>
+                <h2>🎲 Egregore</h2>
+                <p>Outils et ressources génériques pour vos parties de jeu de rôle, côté joueur et MJ.</p>
+            </div>
+            <span class="badge">JdR</span>
+        </a>
+
+        <!-- Projet Stardew Valley -->
+        <a href="/StardewValley-Checklist/" class="card">
+            <div>
+                <h2>👨‍🌾 Stardew Valley Checklist</h2>
+                <p>Une checklist interactive pour suivre votre progression et vos objectifs à la ferme.</p>
+            </div>
+            <span class="badge">Gaming</span>
+        </a>
+    </main>
+
+    <footer>
+        <p>© 2026 Spidergost — Propulsé par GitHub Pages</p>
+    </footer>
+
+</body>
+</html>
