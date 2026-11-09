@@ -149,7 +149,7 @@
             const grid = document.getElementById('projects-grid');
             
             try {
-                const response = await fetch(`https://github.com{username}/repos?per_page=100&sort=updated`);
+                const response = await fetch(`https://github.com/{username}/repos?per_page=100&sort=updated`);
                 
                 if (!response.ok) {
                     throw new Error('Erreur API');
